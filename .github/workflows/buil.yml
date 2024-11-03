@@ -28,7 +28,7 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t nextjs-app:${{ github.sha }} .
-          docker tag myapp:${{ github.sha }} saiansuri/nextjs-app:${{ github.sha }}  
+          docker tag nextjs-app:${{ github.sha }} saiansuri/nextjs-app:${{ github.sha }}  
       - name: Push Docker Image to Docker Hub
         run: |
           docker push saiansuri/nextjs-app:${{ github.sha }}
