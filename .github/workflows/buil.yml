@@ -5,16 +5,14 @@ on:
     branches:
       - main
 
-
 jobs:
-  build-analyze-scan:
+  build:
     name: Build
-    runs-on: [self-hosted]
+    runs-on: self-hosted  # Use self-hosted instead of ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
