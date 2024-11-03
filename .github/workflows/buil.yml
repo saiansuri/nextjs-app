@@ -27,9 +27,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t myapp:${{ github.sha }} .
-          docker tag myapp:${{ github.sha }} myusername/myapp:${{ github.sha }}  # Replace 'myusername' with your Docker Hub username
-
+          docker build -t nextjs-app:${{ github.sha }} .
+          docker tag myapp:${{ github.sha }} saiansuri/nextjs-app:${{ github.sha }}  
       - name: Push Docker Image to Docker Hub
         run: |
-          docker push myusername/myapp:${{ github.sha }}
+          docker push saiansuri/nextjs-app:${{ github.sha }}
