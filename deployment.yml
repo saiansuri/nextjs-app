@@ -1,11 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-<<<<<<< HEAD
-  name: nextjs-app
-=======
   name: nextjs-deployment
->>>>>>> aa674dce3d5fa7ecfa6498ad881ea879623993c2
 spec:
   replicas: 1
   selector:
@@ -17,13 +13,8 @@ spec:
         app: nextjs-app
     spec:
       containers:
-<<<<<<< HEAD
-      - name: tic-tac-toe
-        image: sevenajay/tic-tac-toe:latest
-=======
       - name: nextjs-app-container
         image: saiansuri/nextjs-app:latest
->>>>>>> aa674dce3d5fa7ecfa6498ad881ea879623993c2
         ports:
         - containerPort: 3000   # Use port 3000
 
