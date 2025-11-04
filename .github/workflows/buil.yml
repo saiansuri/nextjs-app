@@ -1,52 +1,26 @@
-name: Build and Deploy
+name: Build
+
 on:
   push:
     branches:
       - main
 
+
 jobs:
-  build-and-push:
-    name: Build 
-    runs-on: self-hosted
+  build:
+    name: Build
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: 0
-
-      - name: Run SonarQube Analysis
-        uses: sonarsource/sonarqube-scan-action@master
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
-      - name: Log in to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Build Docker Image
-        run: |
-          docker build -t nextjs-app:${{ github.sha }} .
-          docker tag nextjs-app:${{ github.sha }} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/saiansuri/nextjs-app:${{ github.sha }}  
-          
-      - name: Push Docker Image to Amazon ECR
-        run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/saiansuri/nextjs-app:${{ github.sha }}
-
-  deploy:
-    name: Deploy to EKS
-    runs-on: self-hosted
-    needs: build-and-push
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
-      - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig --name Nextjs-app --region us-east-1
-
-      - name: Set the latest image in Kubernetes
-        run: |
-          kubectl set image deployment/nextjs-deployment nextjs-app=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/saiansuri/nextjs-app:${{ github.sha }}
+      # If you wish to fail your job when the Quality Gate is red, uncomment the
+      # following lines. This would typically be used to fail a deployment.
+      # - uses: sonarsource/sonarqube-quality-gate-action@master
+      #   timeout-minutes: 5
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
